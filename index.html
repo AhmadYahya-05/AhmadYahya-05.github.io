@@ -597,7 +597,7 @@
     
     <header>
         <nav>
-            <a href="#" class="logo">🧑🏽‍💻</a>
+            <a href="#" class="nav-links">🧑🏽‍💻</a>
             <div class="nav-links">
                 <a href="#about">About</a>
                 <a href="#projects">Projects</a>
@@ -656,7 +656,29 @@
     <section class="projects" id="projects">
         <h2 class="section-title">My Projects</h2>
         <div class="project-grid">
-            <!-- Project 1 -->
+            
+             <!-- Project 1 -->
+            <div class="project-card">
+                <div class="project-img">
+                    <img src="fitquest.png" alt="Project Preview">
+                </div>
+                <div class="project-content">
+                    <h3>FitQuest</h3>
+                    <p>FitQuest is an AI-powered fitness game that makes workouts fun, blending: AI Coach, Nutritionist AI, Real-Time Form Analysis, and RPG Progression. Level up your body, not just your character!</p>
+                    <div class="tags">
+                        <span class="tag">React.js</span>
+                        <span class="tag">MongoDB</span>
+                        <span class="tag">Gemini API</span>
+                        <span class="tag">Express</span>
+                        <span class="tag">Railway</span>
+                        
+                    </div>
+                    <a href="https://algorithmathletes-production.up.railway.app/" class="btn project-btn" data-type="live">View Project</a>
+                </div>
+            </div>
+            
+            
+            <!-- Project 2 -->
             <div class="project-card">
                 <div class="project-img">
                     <img src="exam_scheduler.png" alt="Project Preview">
@@ -671,11 +693,11 @@
                         <span class="tag">Railway</span>
                         <span class="tag">Vercel</span>
                     </div>
-                    <a href="#" class="btn">View Project</a>
+                    <a href="https://laurierexamscheduler.vercel.app/" class="btn project-btn" data-type="live">View Project</a>
                 </div>
             </div>
             
-            <!-- Project 2 -->
+            <!-- Project 3 -->
             <div class="project-card">
                 <div class="project-img">
                     <img src="nba-app.png" alt="Project Preview"> 
@@ -688,11 +710,11 @@
                         <span class="tag">Node.js</span>
                         <span class="tag">NBA API</span>
                     </div>
-                    <a href="#" class="btn">View Project</a>
+                    <a href="#" class="btn project-btn" data-type="video">View Project</a>
                 </div>
             </div>
             
-            <!-- Project 3 -->
+            <!-- Project 4 -->
             <div class="project-card">
                 <div class="project-img">
                     <img src="calorie-app.png" alt="Project Preview">
@@ -704,11 +726,11 @@
                         <span class="tag">React.js</span>
                         <span class="tag">Tailwind CSS</span>
                     </div>
-                    <a href="#" class="btn">View Project</a>
+                    <a href="#" class="btn project-btn" data-type="video">View Project</a>
                 </div>
             </div>
             
-            <!-- Project 4 -->
+            <!-- Project 5 -->
             <div class="project-card">
                 <div class="project-img">
                     <img src="weather.png" alt="Project Preview">
@@ -721,7 +743,7 @@
                         <span class="tag">React.js</span>
                         <span class="tag">Weather API</span>
                     </div>
-                    <a href="#" class="btn">View Project</a>
+                    <a href="#" class="btn project-btn" data-type="video">View Project</a>
                 </div>
             </div>
         </div>
@@ -801,28 +823,59 @@
             });
         });
 
+        // Project configuration - defines the behavior for each project
+        const projectConfig = [
+            {
+                // FitQuest - live website
+                type: "live",
+                url: "https://algorithmathletes-production.up.railway.app/"
+            },
+            {
+                // Laurier Exam Scheduler - live website
+                type: "live", 
+                url: "https://examscheduler-mu.vercel.app/"
+            },
+            {
+                // Player Matchup - video demo
+                type: "video",
+                title: "Player Matchup Demo", 
+                src: "nbaf.mp4"
+            },
+            {
+                // Macro Tracker - video demo
+                type: "video",
+                title: "Macro Tracker Demo", 
+                src: "calories.mp4"
+            },
+            {
+                // Weather Dashboard - video demo
+                type: "video",
+                title: "Weather Dashboard Demo", 
+                src: "weather.mp4"
+            }
+        ];
+
         // Modern Video Modal
         const modal = document.getElementById("videoModal");
         const modalTitle = document.getElementById("modal-title");
         const video = document.getElementById("projectVideo");
         const closeBtn = document.querySelector(".close-btn");
         
-        const projectButtons = document.querySelectorAll(".project-card .btn");
-        
-        const projectVideos = [
-            {title: "Laurier Exam Scheduler Demo", src: "examscheduler.mp4"},
-            {title: "Player Matchup Demo", src: "nbaf.mp4"},
-            {title: "Macro Tracker Demo", src: "calories.mp4"},
-            {title: "Weather Dashboard Demo", src: "weather.mp4"}
-        ];
+        const projectButtons = document.querySelectorAll(".project-btn");
         
         projectButtons.forEach((button, index) => {
             button.addEventListener("click", function(e) {
                 e.preventDefault();
                 
-                if (projectVideos[index]) {
-                    modalTitle.textContent = projectVideos[index].title;
-                    video.src = projectVideos[index].src;
+                const config = projectConfig[index];
+                
+                if (config.type === "live") {
+                    // Open live website in new tab
+                    window.open(config.url, '_blank');
+                } else if (config.type === "video") {
+                    // Show video modal
+                    modalTitle.textContent = config.title;
+                    video.src = config.src;
                     modal.style.display = "block";
                     setTimeout(() => {
                         modal.classList.add('show');
