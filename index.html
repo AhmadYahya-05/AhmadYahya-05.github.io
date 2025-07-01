@@ -92,10 +92,9 @@
         .hero {
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            text-align: center;
+            text-align: left;
             padding: 0 2rem;
             background: linear-gradient(135deg, var(--background) 0%, var(--background-alt) 100%);
             position: relative;
@@ -114,11 +113,122 @@
             pointer-events: none;
         }
 
-        .hero-content {
-            position: relative;
+        .hero-inner {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 1200px;
             z-index: 2;
+            gap: 3rem;
         }
 
+        .hero-content {
+            flex: 1 1 0;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            height: 100%;
+        }
+
+        .terminal {
+            flex: 0 0 400px;
+            min-width: 320px;
+            max-width: 400px;
+            margin-left: auto;
+            background: #181f2a;
+            border-radius: 14px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.25);
+            border: 2px solid #232b39;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            font-family: 'Fira Mono', 'Consolas', 'Menlo', monospace;
+            margin-bottom: 0;
+        }
+        .terminal-header {
+            display: flex;
+            align-items: center;
+            height: 36px;
+            background: #232b39;
+            border-bottom: 2px solid #232b39;
+            padding: 0 1rem;
+            gap: 0.5rem;
+        }
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 6px;
+            display: inline-block;
+        }
+        .terminal-dot.red { background: #ff5f56; }
+        .terminal-dot.yellow { background: #ffbd2e; }
+        .terminal-dot.green { background: #27c93f; }
+        .terminal-body {
+            padding: 1.2rem 1.5rem;
+            color: #a5b4fc;
+            font-size: 1.05rem;
+            min-height: 180px;
+            white-space: pre-line;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            background: #181f2a;
+            border-bottom-left-radius: 14px;
+            border-bottom-right-radius: 14px;
+            overflow-y: auto;
+            max-height: 350px;
+        }
+        .terminal-line {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            font-size: 1.05rem;
+            color: #a5b4fc;
+            margin-bottom: 2px;
+            word-break: break-all;
+        }
+        .terminal-prompt {
+            color: #60a5fa;
+            font-weight: 600;
+            margin-right: 0.5em;
+        }
+        .terminal-input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #a5b4fc;
+            font-family: inherit;
+            font-size: 1.05rem;
+            flex: 1;
+            min-width: 2em;
+            caret-color: #fbbf24;
+        }
+        .terminal-output {
+            color: #fbbf24;
+            margin-left: 1.5em;
+            font-size: 1.05rem;
+            margin-bottom: 2px;
+        }
+        .terminal-cursor {
+            display: inline-block;
+            width: 8px;
+            height: 1.1em;
+            background: #fbbf24;
+            margin-left: 2px;
+            animation: blink 1s steps(1) infinite;
+            vertical-align: middle;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
         .hero h1 {
             font-size: 4rem;
             font-weight: 700;
@@ -454,38 +564,16 @@
         }
 
         /* Responsive Design */
+        @media (max-width: 1000px) {
+            .hero-inner { flex-direction: column; gap: 2rem; align-items: stretch; }
+            .terminal { max-width: 100%; min-width: 0; margin-left: 0; }
+            .hero-content { align-items: center; text-align: center; }
+        }
+
         @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-
-            .section-title {
-                font-size: 2rem;
-            }
-
-            .contact-container {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-            }
-
-            .nav-links {
-                display: none;
-            }
-
-            .hero-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .tech-icons {
-                gap: 1rem;
-            }
-
-            .tech-icon {
-                width: 50px;
-                height: 50px;
-                font-size: 1.25rem;
-            }
+            #particle-canvas { display: none; }
+            .hero-inner { flex-direction: column; gap: 1.5rem; }
+            .terminal { min-width: 0; max-width: 100%; }
         }
 
         /* Animations */
@@ -588,13 +676,25 @@
             margin-top: 20px;
             border-radius: 8px;
         }
+
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.7;
+        }
     </style>
 </head>
 <body>
     <div class="loading">
         <div class="loading-spinner"></div>
     </div>
-    
+    <!-- Particle Background Canvas -->
+    <canvas id="particle-canvas"></canvas>
     <header>
         <nav>
             <a href="#" class="nav-links">🧑🏽‍💻</a>
@@ -607,47 +707,57 @@
     </header>
 
     <section class="hero" id="about">
-        <div class="hero-content">
-            <h1>Hi, I'm Ahmad Yahya</h1>
-            <div class="subtitle">Software Developer</div>
-            <p>I love creating solutions that make a difference.</p>
-            
-            <div class="hero-buttons">
-                <a href="#contact" class="btn">
-                    <i class="fas fa-envelope"></i>
-                    Get In Touch
-                </a>
-                <a href="https://github.com/AhmadYahya-05" class="btn btn-outline" target="_blank">
-                    <i class="fab fa-github"></i>
-                    GitHub
-                </a>
-                <a href="https://www.linkedin.com/public-profile/settings?trk=d_flagship3_profile_self_view_public_profile" class="btn btn-outline" target="_blank">
-                    <i class="fab fa-linkedin"></i>
-                    LinkedIn
-                </a>
+        <div class="hero-inner">
+            <div class="hero-content">
+                <h1>Hi, I'm Ahmad Yahya</h1>
+                <div class="subtitle">Software Developer</div>
+                <p>I love creating solutions that make a difference.</p>
+                <div class="hero-buttons">
+                    <a href="#contact" class="btn">
+                        <i class="fas fa-envelope"></i>
+                        Get In Touch
+                    </a>
+                    <a href="https://github.com/AhmadYahya-05" class="btn btn-outline" target="_blank">
+                        <i class="fab fa-github"></i>
+                        GitHub
+                    </a>
+                    <a href="https://www.linkedin.com/public-profile/settings?trk=d_flagship3_profile_self_view_public_profile" class="btn btn-outline" target="_blank">
+                        <i class="fab fa-linkedin"></i>
+                        LinkedIn
+                    </a>
+                </div>
+                <div class="tech-stack">
+                    <h3>Technologies I Work With</h3>
+                    <div class="tech-icons">
+                        <div class="tech-icon react" title="React">
+                            <i class="fab fa-react"></i>
+                        </div>
+                        <div class="tech-icon node" title="Node.js">
+                            <i class="fab fa-node-js"></i>
+                        </div>
+                        <div class="tech-icon js" title="JavaScript">
+                            <i class="fab fa-js-square"></i>
+                        </div>
+                        <div class="tech-icon python" title="Python">
+                            <i class="fab fa-python"></i>
+                        </div>
+                        <div class="tech-icon java" title="Java">
+                            <i class="fab fa-java"></i>
+                        </div>
+                        <div class="tech-icon sql" title="Database">
+                            <i class="fas fa-database"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
-
-            <div class="tech-stack">
-                <h3>Technologies I Work With</h3>
-                <div class="tech-icons">
-                    <div class="tech-icon react" title="React">
-                        <i class="fab fa-react"></i>
-                    </div>
-                    <div class="tech-icon node" title="Node.js">
-                        <i class="fab fa-node-js"></i>
-                    </div>
-                    <div class="tech-icon js" title="JavaScript">
-                        <i class="fab fa-js-square"></i>
-                    </div>
-                    <div class="tech-icon python" title="Python">
-                        <i class="fab fa-python"></i>
-                    </div>
-                    <div class="tech-icon java" title="Java">
-                        <i class="fab fa-java"></i>
-                    </div>
-                    <div class="tech-icon sql" title="Database">
-                        <i class="fas fa-database"></i>
-                    </div>
+            <div class="terminal">
+                <div class="terminal-header">
+                    <span class="terminal-dot red"></span>
+                    <span class="terminal-dot yellow"></span>
+                    <span class="terminal-dot green"></span>
+                </div>
+                <div class="terminal-body" id="terminal-body">
+                    <!-- Terminal lines will be injected here -->
                 </div>
             </div>
         </div>
@@ -910,6 +1020,194 @@
             icon.addEventListener('mouseleave', function() {
                 this.style.animationPlayState = 'running';
             });
+        });
+
+        // Particle Background
+        const canvas = document.getElementById('particle-canvas');
+        if (canvas) {
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+            const particleCount = 70;
+            const colors = ['#3b82f6', '#60a5fa', '#fbbf24', '#a78bfa', '#f472b6'];
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+            function Particle() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.radius = Math.random() * 2.5 + 1;
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.vx = (Math.random() - 0.5) * 0.7;
+                this.vy = (Math.random() - 0.5) * 0.7;
+            }
+            Particle.prototype.draw = function() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.globalAlpha = 0.7;
+                ctx.fill();
+                ctx.globalAlpha = 1;
+            };
+            Particle.prototype.update = function() {
+                this.x += this.vx;
+                this.y += this.vy;
+                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+            };
+            function connectParticles() {
+                for (let i = 0; i < particles.length; i++) {
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < 120) {
+                            ctx.beginPath();
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.strokeStyle = '#3b82f6';
+                            ctx.globalAlpha = 0.15;
+                            ctx.stroke();
+                            ctx.globalAlpha = 1;
+                        }
+                    }
+                }
+            }
+            function animateParticles() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => { p.update(); p.draw(); });
+                connectParticles();
+                requestAnimationFrame(animateParticles);
+            }
+            particles = Array.from({length: particleCount}, () => new Particle());
+            animateParticles();
+        }
+        // Live Code Typing Animation
+        const codeLines = [
+            'const developer = "Ahmad Yahya";',
+            'const stack = ["React", "Node.js", "Python", "Java", "SQL"];',
+            'function build(project) {',
+            '    return project.innovative && project.userFriendly;',
+            '}',
+            'const openToWork = true;'
+        ];
+        const codeTyping = document.getElementById('code-typing');
+        if (codeTyping) {
+            let line = 0, char = 0;
+            function typeLine() {
+                if (line < codeLines.length) {
+                    if (char <= codeLines[line].length) {
+                        codeTyping.textContent = codeLines.slice(0, line).join('\n') + (line > 0 ? '\n' : '') + codeLines[line].slice(0, char) + '|';
+                        char++;
+                        setTimeout(typeLine, 30);
+                    } else {
+                        char = 0;
+                        line++;
+                        setTimeout(typeLine, 400);
+                    }
+                } else {
+                    codeTyping.textContent = codeLines.join('\n');
+                }
+            }
+            typeLine();
+        }
+
+        // Terminal Interactivity
+        const terminalBody = document.getElementById('terminal-body');
+        const promptText = 'ahmad@portfolio:~$';
+        let terminalHistory = [
+            { type: 'output', value: 'Welcome to Ahmad Yahya\'s portfolio terminal! Type \x1b[1mhelp\x1b[0m for commands.' }
+        ];
+        let currentInput = '';
+        let isProcessing = false;
+
+        function renderTerminal() {
+            terminalBody.innerHTML = '';
+            terminalHistory.forEach(line => {
+                if (line.type === 'input') {
+                    const div = document.createElement('div');
+                    div.className = 'terminal-line';
+                    div.innerHTML = `<span class="terminal-prompt">${promptText}</span>${escapeHtml(line.value)}`;
+                    terminalBody.appendChild(div);
+                } else if (line.type === 'output') {
+                    const div = document.createElement('div');
+                    div.className = 'terminal-output';
+                    div.innerHTML = ansiToHtml(line.value);
+                    terminalBody.appendChild(div);
+                }
+            });
+            // Input line
+            const inputDiv = document.createElement('div');
+            inputDiv.className = 'terminal-line';
+            inputDiv.innerHTML = `<span class="terminal-prompt">${promptText}</span><input class="terminal-input" id="terminal-input" autocomplete="off" spellcheck="false" autofocus /> <span class="terminal-cursor"></span>`;
+            terminalBody.appendChild(inputDiv);
+            // Focus input
+            setTimeout(() => {
+                const input = document.getElementById('terminal-input');
+                if (input) {
+                    input.value = currentInput;
+                    input.focus();
+                    input.setSelectionRange(currentInput.length, currentInput.length);
+                }
+                terminalBody.scrollTop = terminalBody.scrollHeight;
+            }, 10);
+        }
+
+        function escapeHtml(text) {
+            return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+        // Simple ANSI bold to HTML
+        function ansiToHtml(text) {
+            return text.replace(/\x1b\[1m/g, '<b>').replace(/\x1b\[0m/g, '</b>');
+        }
+
+        function handleTerminalInput(e) {
+            if (isProcessing) return;
+            if (e.key === 'Enter') {
+                const input = currentInput.trim();
+                terminalHistory.push({ type: 'input', value: input });
+                currentInput = '';
+                isProcessing = true;
+                processCommand(input);
+            } else if (e.key.length === 1 || e.key === 'Backspace') {
+                currentInput = e.target.value;
+            }
+        }
+
+        function processCommand(cmd) {
+            let output = '';
+            if (cmd === 'help') {
+                output = 'Available commands: <b>cd projects</b>, <b>help</b>';
+            } else if (cmd === 'cd projects') {
+                output = 'Navigating to projects...';
+                setTimeout(() => {
+                    const projectsSection = document.getElementById('projects');
+                    if (projectsSection) {
+                        projectsSection.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }, 500);
+            } else if (cmd === '') {
+                output = '';
+            } else {
+                output = `command not found: <b>${escapeHtml(cmd)}</b>`;
+            }
+            if (output) terminalHistory.push({ type: 'output', value: output });
+            isProcessing = false;
+            renderTerminal();
+        }
+
+        renderTerminal();
+        terminalBody.addEventListener('keydown', function(e) {
+            if (e.target.classList.contains('terminal-input')) {
+                handleTerminalInput(e);
+            }
+        });
+        terminalBody.addEventListener('input', function(e) {
+            if (e.target.classList.contains('terminal-input')) {
+                currentInput = e.target.value;
+            }
         });
     </script>
 </body>
