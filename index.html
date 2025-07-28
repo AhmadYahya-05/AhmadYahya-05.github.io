@@ -407,6 +407,28 @@
             transition: transform 0.3s ease;
         }
 
+        .project-sticker {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #1f2937;
+            padding: 0.5rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3);
+            z-index: 2;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .project-sticker::before {
+            content: '🏆';
+            margin-right: 0.25rem;
+        }
+
         .project-card:hover .project-img img {
             transform: scale(1.05);
         }
@@ -778,6 +800,7 @@
             <div class="project-card">
                 <div class="project-img">
                     <img src="fitquest.png" alt="Project Preview">
+                    <div class="project-sticker">Winner</div>
                 </div>
                 <div class="project-content">
                     <h3>FitQuest</h3>
