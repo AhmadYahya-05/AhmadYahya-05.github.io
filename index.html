@@ -8,6 +8,7 @@
     <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧑🏽‍💻</text></svg>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js"></script>
     <style>
         :root {
             --primary: #3b82f6;
@@ -594,6 +595,45 @@
             z-index: 1;
         }
 
+        /* QR Code Styling */
+        .qr-container {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #qr-code {
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+            border-radius: 8px;
+            overflow: hidden;
+            background: rgba(248, 250, 252, 0.1);
+            padding: 8px;
+            min-height: 96px;
+            min-width: 96px;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+        }
+
+        #qr-code:hover {
+            opacity: 1;
+        }
+
+        #qr-code canvas {
+            display: block;
+            border-radius: 4px;
+        }
+
+        /* Debug styling - remove after testing */
+        .qr-container {
+            border: 1px dashed rgba(59, 130, 246, 0.3);
+        }
+
+        #qr-code canvas {
+            display: block;
+            border-radius: 4px;
+        }
+
         /* Responsive Design */
         @media (max-width: 1000px) {
             .hero-inner { flex-direction: column; gap: 2rem; align-items: stretch; }
@@ -605,6 +645,11 @@
             #particle-canvas { display: none; }
             .hero-inner { flex-direction: column; gap: 1.5rem; }
             .terminal { min-width: 0; max-width: 100%; }
+            
+            /* QR Code responsive */
+            #qr-code {
+                transform: scale(0.8);
+            }
         }
 
         /* Animations */
@@ -939,6 +984,9 @@
 
     <footer>
         <p>© 2025 Ahmad Yahya | Full-Stack Developer</p>
+        <div class="qr-container">
+            <div id="qr-code"></div>
+        </div>
     </footer>
 
     <!-- Modern Video Modal -->
@@ -1284,6 +1332,81 @@
             e.preventDefault();
             currentEmojiIndex = (currentEmojiIndex + 1) % emojis.length;
             logo.textContent = emojis[currentEmojiIndex];
+        });
+
+        // Generate QR Code
+        function generateQRCode() {
+            console.log('Attempting to generate QR code...');
+            const qrContainer = document.getElementById('qr-code');
+            
+            if (!qrContainer) {
+                console.error('QR container not found');
+                return;
+            }
+            
+            // Check for QRCode library with multiple possible names
+            if (typeof QRCode === 'undefined' && typeof window.QRCode === 'undefined') {
+                console.error('QRCode library not loaded, trying fallback...');
+                
+                // Create a simple fallback QR code using QRServer API
+                const websiteURL = 'https://ahmadyahya-05.github.io/';
+                const fallbackURL = `https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=${encodeURIComponent(websiteURL)}`;
+                
+                qrContainer.innerHTML = `<img src="${fallbackURL}" alt="QR Code" style="width: 80px; height: 80px; opacity: 0.7; border-radius: 4px;" />`;
+                console.log('Using fallback QR service for:', websiteURL);
+                return;
+            }
+            
+            try {
+                // Get current website URL
+                let websiteURL = window.location.href.split('#')[0]; // Remove any hash fragments
+                
+                // Always use your GitHub Pages URL for consistency
+                websiteURL = 'https://ahmadyahya-05.github.io/';
+                
+                console.log('Generating QR code for URL:', websiteURL);
+                
+                // Try the QRCode library
+                const QRCodeLib = window.QRCode || QRCode;
+                
+                // Generate QR code with subtle styling
+                QRCodeLib.toCanvas(qrContainer, websiteURL, {
+                    width: 80,
+                    height: 80,
+                    color: {
+                        dark: '#e2e8f0',  // Lighter color for better visibility
+                        light: 'transparent'  // Transparent background
+                    },
+                    margin: 1,
+                    errorCorrectionLevel: 'M'
+                }, function (error) {
+                    if (error) {
+                        console.error('QR Code generation failed:', error);
+                        // Fallback to image-based QR code
+                        const fallbackURL = `https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=${encodeURIComponent(websiteURL)}`;
+                        qrContainer.innerHTML = `<img src="${fallbackURL}" alt="QR Code" style="width: 80px; height: 80px; opacity: 0.7; border-radius: 4px;" />`;
+                    } else {
+                        console.log('QR Code generated successfully for:', websiteURL);
+                    }
+                });
+                
+            } catch (error) {
+                console.error('QR Code generation failed:', error);
+                // Final fallback
+                const websiteURL = 'https://ahmadyahya-05.github.io/';
+                const fallbackURL = `https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=${encodeURIComponent(websiteURL)}`;
+                qrContainer.innerHTML = `<img src="${fallbackURL}" alt="QR Code" style="width: 80px; height: 80px; opacity: 0.7; border-radius: 4px;" />`;
+            }
+        }
+
+        // Generate QR code when page loads
+        window.addEventListener('load', function() {
+            setTimeout(generateQRCode, 2000); // Longer delay to ensure library is loaded
+        });
+        
+        // Fallback: try again after DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(generateQRCode, 3000);
         });
     </script>
 </body>
