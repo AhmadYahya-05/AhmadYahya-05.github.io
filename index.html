@@ -471,6 +471,134 @@
             border: 1px solid var(--border);
         }
 
+        /* Experience Section */
+        .experience {
+            padding: 8rem 2rem;
+            background-color: rgba(30, 41, 59, 0.8);
+            position: relative;
+            z-index: 1;
+        }
+
+        .experience-container {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .experience-container::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--primary), transparent);
+        }
+
+        .experience-item {
+            padding-left: 2.5rem;
+            padding-bottom: 3rem;
+            position: relative;
+        }
+
+        .experience-item:last-child {
+            padding-bottom: 0;
+        }
+
+        .experience-item::before {
+            content: '';
+            position: absolute;
+            left: -6px;
+            top: 6px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--primary);
+            border: 2px solid var(--background);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+        }
+
+        .experience-card {
+            background: var(--background-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.75rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .experience-card:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .experience-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .experience-company {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        .experience-location {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .experience-role {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .experience-date {
+            font-size: 0.875rem;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        .experience-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .experience-bullets {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .experience-bullets li {
+            color: var(--text-light);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            padding-left: 1.25rem;
+            position: relative;
+        }
+
+        .experience-bullets li::before {
+            content: '▹';
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+        }
+
+        @media (max-width: 768px) {
+            .experience-header { flex-direction: column; }
+        }
+
         /* Contact Section */
         .contact {
             padding: 8rem 2rem;
@@ -777,6 +905,7 @@
             <div class="nav-links">
                 <a href="#home">Home</a>
                 <a href="#projects">Projects</a>
+                <a href="#experience">Experience</a>
                 <a href="#contact">Contact</a>
             </div>
         </nav>
@@ -868,6 +997,25 @@
             <!-- Project 2 -->
             <div class="project-card">
                 <div class="project-img">
+                    <img src="routeguard.jpg" alt="Project Preview">
+                    <div class="project-sticker">Winner</div>
+                </div>
+                <div class="project-content">
+                    <h3>RouteGuard</h3>
+                    <p>RouteGuard is an AI-powered safety navigation app that analyzes real-time crime data to suggest the safest walking routes, keeping users protected on every journey.</p>
+                    <div class="tags">
+                        <span class="tag">Python</span>
+                        <span class="tag">React.js</span>
+                        <span class="tag">Google Maps API</span>
+                        <span class="tag">FastAPI</span>
+                    </div>
+                    <a href="#" class="btn project-btn" data-type="video">View Project</a>
+                </div>
+            </div>
+
+            <!-- Project 3 -->
+            <div class="project-card">
+                <div class="project-img">
                     <img src="exam_scheduler.png" alt="Project Preview">
                 </div>
                 <div class="project-content">
@@ -918,23 +1066,6 @@
                 </div>
             </div>
             
-            <!-- Project 5 -->
-            <div class="project-card">
-                <div class="project-img">
-                    <img src="quote.png" alt="Project Preview">
-                </div>
-                <div class="project-content">
-                    <h3>ZenQuotes</h3>
-                    <p>Quote of the Day. Built using ZenQuotes API</p>
-                    <div class="tags">
-                        <span class="tag">React.js</span>
-                        <span class="tag">CSS</span>
-                        <span class="tag">TypeScript</span>
-                    </div>
-                    <a href="https://quote-of-the-day-six-omega.vercel.app/" class="btn project-btn" data-type="live">View Project</a>
-                </div>
-            </div>
-            
             <!-- Project 6 -->
             <div class="project-card">
                 <div class="project-img">
@@ -953,6 +1084,81 @@
             
            
             
+        </div>
+    </section>
+
+    <section class="experience" id="experience">
+        <h2 class="section-title">Work Experience</h2>
+        <div class="experience-container">
+
+            <!-- RBC -->
+            <div class="experience-item">
+                <div class="experience-card">
+                    <div class="experience-header">
+                        <span class="experience-company">RBC &mdash; Royal Bank of Canada</span>
+                        <span class="experience-location">Toronto, Canada</span>
+                    </div>
+                    <div class="experience-role">Software Engineer Intern</div>
+                    <div class="experience-date">Jan 2026 &ndash; Aug 2026</div>
+                    <div class="experience-tags">
+                        <span class="tag">JavaScript</span>
+                        <span class="tag">Angular.js</span>
+                        <span class="tag">Node.js</span>
+                        <span class="tag">MongoDB</span>
+                    </div>
+                    <ul class="experience-bullets">
+                        <li>Developing an analytics tool measuring team productivity and maturity, driving the project from inception to deployment — estimated to save <strong>$30MM in development costs</strong> over 3 years.</li>
+                        <li>Spearheading development of <strong>1UP Assist</strong>, an intelligent MCP-native chatbot that orchestrates custom-built MCP tools to surface real-time team productivity insights, replacing manual reporting with natural language queries against live Jira, GitHub, and engineering pipeline data.</li>
+                        <li>Designed and built a fully customizable analytics dashboard with a dynamic tile system featuring drag-and-drop layout management, building end-to-end backend data services and RESTful APIs in Node.js integrated with an Angular frontend.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Dominarlo SWE -->
+            <div class="experience-item">
+                <div class="experience-card">
+                    <div class="experience-header">
+                        <span class="experience-company">Dominarlo</span>
+                        <span class="experience-location">Edmonton, Canada</span>
+                    </div>
+                    <div class="experience-role">Software Engineer</div>
+                    <div class="experience-date">Sept 2024 &ndash; Apr 2025</div>
+                    <div class="experience-tags">
+                        <span class="tag">JavaScript</span>
+                        <span class="tag">React.js</span>
+                        <span class="tag">MongoDB</span>
+                    </div>
+                    <ul class="experience-bullets">
+                        <li>Integrated Google Cloud Translate API to support real-time language switching (En, Ar, Fr), increasing accessibility for <strong>30%+ of non-English users</strong>.</li>
+                        <li>Designed and developed an interactive quiz game using React.js, enhancing user engagement with real-time question-answer interactions.</li>
+                        <li>Architected RESTful APIs for user auth, game state management, and leaderboard tracking — structured JSON payloads ensured scalable performance across <strong>5,000+ users</strong>.</li>
+                        <li>Built a responsive UI with React components and CSS frameworks, ensuring <strong>99% cross-device compatibility</strong> across desktops, tablets, and mobile.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Dominarlo Intern -->
+            <div class="experience-item">
+                <div class="experience-card">
+                    <div class="experience-header">
+                        <span class="experience-company">Dominarlo</span>
+                    </div>
+                    <div class="experience-role">Software Engineer Intern</div>
+                    <div class="experience-date">May 2024 &ndash; Sept 2024</div>
+                    <div class="experience-tags">
+                        <span class="tag">JavaScript</span>
+                        <span class="tag">React.js</span>
+                        <span class="tag">OAuth2</span>
+                    </div>
+                    <ul class="experience-bullets">
+                        <li>Implemented Single Sign-On (SSO) using OAuth2 in a React web app to streamline authentication across multiple platforms.</li>
+                        <li>Developed dynamic RESTful APIs for data retrieval supporting <strong>5,000+ concurrent users</strong> with optimized backend queries.</li>
+                        <li>Conducted code reviews and rigorous testing for three new features, contributing to an increase in user engagement.</li>
+                        <li>Collaborated with front-end and QA teams to identify bugs, streamline development cycles, and deliver high-impact features.</li>
+                    </ul>
+                </div>
+            </div>
+
         </div>
     </section>
 
@@ -1038,36 +1244,36 @@
             {
                 // FitQuest - live website
                 type: "live",
-                url: "https://algorithmathletes-production.up.railway.app/"
+                url: "https://devpost.com/software/fitness-quest-31h2ci"
+            },
+            {
+                // RouteGuard - video demo
+                type: "video",
+                title: "RouteGuard Demo",
+                src: "routeGuard.mp4"
             },
             {
                 // Laurier Exam Scheduler - live website
-                type: "live", 
+                type: "live",
                 url: "https://examscheduler-mu.vercel.app/"
             },
             {
-                // Laurier Exam Scheduler - live website
-                type: "live", 
+                // Mindful Harmony - live website
+                type: "live",
                 url: "https://ignition-hacks-copy-production.up.railway.app/"
             },
             {
                 // Player Matchup - video demo
                 type: "video",
-                title: "Player Matchup Demo", 
+                title: "Player Matchup Demo",
                 src: "nbaf.mp4"
-            },
-            {
-                // New Project - video demo
-                type: "live",
-                url: "https://quote-of-the-day-six-omega.vercel.app/"
             },
             {
                 // Macro Tracker - video demo
                 type: "video",
-                title: "Macro Tracker Demo", 
+                title: "Macro Tracker Demo",
                 src: "calories.mp4"
             }
-            
         ];
 
         // Modern Video Modal
