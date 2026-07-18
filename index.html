@@ -1,1134 +1,486 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ahmad Yahya — Software Developer</title>
-    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌍</text></svg>">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;600&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js"></script>
-    <style>
-        :root {
-            --accent:   #4d9fff;
-            --accent2:  #a855f7;
-            --panel-bg: rgba(2, 6, 18, 0.94);
-            --border:   rgba(77,159,255,0.18);
-            --white:    #ffffff;
-            --muted:    #7a90b0;
-            --ff-disp:  'Bebas Neue', sans-serif;
-            --ff-body:  'Space Grotesk', sans-serif;
-            --ff-mono:  'Space Mono', monospace;
-        }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ahmad Yahya</title>
+<meta name="description" content="Ahmad Yahya — software developer based in Toronto." />
+<link rel="icon" type="image/jpeg" href="favicon.jpg" />
+<style>
+  :root {
+    --fg: #ededeb;
+    --muted: #8f8f88;
+    --faint: #5d5d57;
+    --line: #232321;
+    --accent: #ededeb;
+    --hover: rgba(255,255,255,0.04);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-font-smoothing: antialiased; }
+  body {
+    background: #000;
+    color: var(--fg);
+    font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    letter-spacing: -0.01em;
+    min-height: 100vh;
+  }
 
-        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-        html, body { width:100%; height:100%; overflow:hidden; }
-        body {
-            background: #000510;
-            color: var(--white);
-            font-family: var(--ff-body);
-            cursor: none;
-        }
-        a { color:inherit; text-decoration:none; }
-        ul { list-style:none; }
+  /* shader background */
+  #vortex {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    pointer-events: none;
+    display: block;
+  }
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background: radial-gradient(circle at 50% 36%, rgba(0,0,0,0.45), rgba(0,0,0,0.82) 70%);
+  }
 
-        /* ── Canvas ── */
-        #c {
-            position: fixed; inset: 0;
-            z-index: 0; display: block;
-        }
+  main {
+    position: relative;
+    z-index: 1;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 92px 28px 120px;
+  }
 
-        /* ── Cursor ── */
-        .c-dot {
-            width:6px; height:6px; background:var(--accent);
-            border-radius:50%; position:fixed; z-index:99999;
-            pointer-events:none; transform:translate(-50%,-50%);
-            transition: background .2s;
-        }
-        .c-ring {
-            width:28px; height:28px;
-            border:1.5px solid rgba(77,159,255,.5);
-            border-radius:50%; position:fixed; z-index:99998;
-            pointer-events:none; transform:translate(-50%,-50%);
-            transition: width .15s ease, height .15s ease, background .15s ease, border-color .15s ease;
-        }
-        .c-ring.hov { width:48px; height:48px; background:rgba(77,159,255,.08); border-color:var(--accent); }
+  a {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid var(--faint);
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+  a:hover { border-color: var(--accent); }
+  a.row { border-bottom: none; }
 
-        /* ── Loading ── */
-        #loading {
-            position:fixed; inset:0; background:#000510;
-            display:flex; flex-direction:column;
-            align-items:center; justify-content:center;
-            z-index:99990; transition:opacity .9s ease;
-        }
-        #loading.hide { opacity:0; pointer-events:none; }
-        .ld-title {
-            font-family:var(--ff-disp); font-size:4.5rem; letter-spacing:.2em;
-            color:var(--white); text-shadow:0 0 50px rgba(77,159,255,.7);
-        }
-        .ld-sub {
-            font-family:var(--ff-mono); font-size:.7rem; letter-spacing:.35em;
-            color:var(--muted); margin-top:.6rem; text-transform:uppercase;
-        }
-        .ld-bar-wrap {
-            width:200px; height:1px; background:rgba(77,159,255,.15);
-            margin-top:2rem; overflow:hidden;
-        }
-        .ld-bar {
-            height:100%; background:var(--accent);
-            box-shadow:0 0 10px var(--accent);
-            animation:ldBar 1.4s ease forwards;
-        }
-        @keyframes ldBar { from{width:0} to{width:100%} }
+  /* header */
+  header {
+    margin-bottom: 38px;
+    padding-bottom: 38px;
+    border-bottom: 1px solid var(--line);
+  }
+  h1 {
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin-bottom: 4px;
+    text-shadow: 0 1px 18px rgba(0,0,0,0.7);
+  }
+  h1 .loc { color: var(--muted); font-weight: 400; margin-left: 6px; }
+  .tagline { color: var(--muted); font-size: 15px; }
 
-        /* ── Hero Overlay ── */
-        #hero-overlay {
-            position:fixed; inset:0; z-index:10;
-            pointer-events:none;
-            transition:opacity .7s ease;
-        }
-        #hero-overlay.hidden { opacity:0; pointer-events:none; }
+  /* sections */
+  section { margin-bottom: 42px; }
+  section:last-of-type { margin-bottom: 38px; }
+  .label {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: var(--faint);
+    margin-bottom: 16px;
+  }
 
-        /* Rotating ring centered on Earth */
-        .ring-wrap {
-            position:absolute; top:50%; left:50%;
-            transform:translate(-50%,-50%);
-            width:240px; height:240px;
-            animation:spinRing 28s linear infinite;
-            pointer-events:none;
-        }
-        @keyframes spinRing { from{transform:translate(-50%,-50%) rotate(0deg)} to{transform:translate(-50%,-50%) rotate(360deg)} }
+  /* rows */
+  .row {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 13px;
+    align-items: start;
+    padding: 9px 10px;
+    margin: 0 -10px;
+    border-radius: 9px;
+    transition: background 0.15s ease;
+  }
+  .row:hover { background: var(--hover); }
+  .ico {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    display: block;
+    margin-top: 6px;
+  }
+  .body {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .body .entry-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .body .title {
+    font-weight: 500;
+    line-height: 1.4;
+  }
+  .body .desc {
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .body .desc.clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    max-width: calc(100% - 50px);
+  }
+  .year {
+    color: var(--faint);
+    font-size: 13px;
+    flex-shrink: 0;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    margin-left: auto;
+  }
 
-        /* Name — above Earth */
-        .hero-name-block {
-            position:absolute;
-            bottom: calc(50% + 130px);
-            left:0; right:0; text-align:center;
-        }
-        .hero-name {
-            font-family:var(--ff-disp);
-            font-size: clamp(4rem, 9vw, 8.5rem);
-            line-height:.88; letter-spacing:.06em;
-            color:var(--white);
-            text-shadow: 0 0 60px rgba(77,159,255,.55), 0 0 120px rgba(77,159,255,.2);
-        }
+  /* projects */
+  .ptitle {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .ptitle .title { font-weight: 500; }
+  .plinks {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+  }
+  .plinks a {
+    color: var(--muted);
+    border-bottom: none;
+  }
+  .plinks a:hover { color: var(--fg); }
+  .stars {
+    color: var(--faint);
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+  }
 
-        /* Info — below Earth */
-        .hero-info-block {
-            position:absolute;
-            top: calc(50% + 130px);
-            left:0; right:0;
-            display:flex; flex-direction:column; align-items:center; gap:.9rem;
-            pointer-events:all;
-        }
-        .hero-title {
-            font-family:var(--ff-mono); font-size:.78rem; letter-spacing:.35em;
-            color:var(--accent); text-transform:uppercase;
-        }
-        .hero-links { display:flex; gap:1rem; }
-        .hero-link {
-            font-family:var(--ff-mono); font-size:.7rem; letter-spacing:.15em;
-            color:var(--muted); border:1px solid rgba(77,159,255,.22);
-            padding:.45rem 1.1rem;
-            display:flex; align-items:center; gap:.45rem;
-            transition:color .2s, border-color .2s;
-        }
-        .hero-link:hover { color:var(--accent); border-color:var(--accent); }
+  /* footer */
+  footer {
+    margin-top: 0;
+    padding-top: 38px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 18px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+  }
+  footer a { border-bottom: none; color: var(--muted); }
+  footer a:hover { color: var(--fg); }
+  #laurier-webring a:hover img { opacity: 1 !important; }
 
-        /* ── Explore hint ── */
-        #explore-hint {
-            position:fixed; bottom:2.2rem; left:50%;
-            transform:translateX(-50%);
-            font-family:var(--ff-mono); font-size:.62rem; letter-spacing:.28em;
-            color:var(--muted); text-transform:uppercase;
-            z-index:10; pointer-events:none;
-            animation:breathe 3.5s ease infinite;
-            transition:opacity .5s ease;
-        }
-        #explore-hint.hidden { opacity:0; }
-        @keyframes breathe { 0%,100%{opacity:.3} 50%{opacity:.85} }
-
-        /* ── Planet Labels ── */
-        .planet-label {
-            position:fixed; z-index:15;
-            transform:translate(-50%,-100%);
-            display:flex; flex-direction:column; align-items:center; gap:.3rem;
-            cursor:pointer; pointer-events:all;
-            transition:opacity .6s ease;
-        }
-        .planet-label.hidden { opacity:0; pointer-events:none; }
-        .lbl-line {
-            width:1px; height:18px;
-            background:linear-gradient(to bottom, transparent, var(--muted));
-        }
-        .lbl-text {
-            font-family:var(--ff-mono); font-size:.6rem; letter-spacing:.22em;
-            color:var(--muted); text-transform:uppercase; white-space:nowrap;
-            transition:color .2s;
-        }
-        .planet-label:hover .lbl-text { color:var(--white); }
-
-        /* ── Back Button ── */
-        #back-btn {
-            position:fixed; top:1.4rem; left:1.4rem; z-index:1000;
-            font-family:var(--ff-mono); font-size:.68rem; letter-spacing:.2em;
-            color:var(--muted); background:rgba(2,6,18,.8);
-            border:1px solid var(--border); padding:.55rem 1.1rem;
-            display:none; align-items:center; gap:.45rem;
-            transition:color .2s, border-color .2s; cursor:pointer;
-            backdrop-filter:blur(12px);
-        }
-        #back-btn.show { display:flex; }
-        #back-btn:hover { color:var(--accent); border-color:var(--accent); }
-
-        /* ── Corner Nav ── */
-        #corner-nav {
-            position:fixed; top:1.6rem; right:1.8rem; z-index:1000;
-            display:flex; flex-direction:column; align-items:flex-end; gap:.85rem;
-            transition:opacity .5s ease;
-        }
-        #corner-nav.hidden { opacity:0; pointer-events:none; }
-        .cnav-item {
-            font-family:var(--ff-mono); font-size:.6rem; letter-spacing:.22em;
-            color:var(--muted); text-transform:uppercase; cursor:pointer;
-            background:none; border:none; padding:0;
-            transition:color .2s;
-            display:flex; align-items:center; gap:.55rem;
-        }
-        .cnav-item::after {
-            content:''; display:block;
-            width:18px; height:1px;
-            background:var(--muted);
-            transition:background .2s, width .2s;
-        }
-        .cnav-item:hover { color:var(--white); }
-        .cnav-item:hover::after { background:var(--accent); width:28px; }
-
-        /* ── Panels ── */
-        .panel {
-            position:fixed; top:0; right:0;
-            width: min(700px, 100vw); height:100vh;
-            background:var(--panel-bg);
-            border-left:1px solid var(--border);
-            z-index:500; display:none; flex-direction:column;
-            backdrop-filter:blur(28px);
-            transform:translateX(100%);
-            transition:transform .55s cubic-bezier(.4,0,.2,1);
-        }
-        .panel.show { display:flex; transform:translateX(0); }
-
-        .panel-header {
-            padding:2rem 2.5rem 1.4rem;
-            border-bottom:1px solid var(--border);
-            flex-shrink:0; position:relative;
-        }
-        .panel-label {
-            font-family:var(--ff-mono); font-size:.62rem; letter-spacing:.3em;
-            color:var(--accent); text-transform:uppercase; margin-bottom:.45rem;
-            display:flex; align-items:center; gap:.55rem;
-        }
-        .panel-label::before { content:''; display:block; width:16px; height:1px; background:var(--accent); }
-        .panel-title {
-            font-family:var(--ff-disp);
-            font-size: clamp(2.4rem, 5.5vw, 4rem);
-            letter-spacing:.06em; line-height:.9;
-        }
-        .panel-close {
-            position:absolute; top:1.2rem; right:1.4rem;
-            background:none; border:none; color:var(--muted);
-            font-size:1.6rem; line-height:1; cursor:pointer;
-            transition:color .2s;
-        }
-        .panel-close:hover { color:var(--white); }
-
-        .panel-body {
-            flex:1; overflow-y:auto; padding:1.8rem 2.5rem 2.5rem;
-            scrollbar-width:thin; scrollbar-color:rgba(77,159,255,.25) transparent;
-        }
-        .panel-body::-webkit-scrollbar { width:3px; }
-        .panel-body::-webkit-scrollbar-thumb { background:rgba(77,159,255,.25); }
-
-        /* ── Project cards ── */
-        .proj-grid { display:flex; flex-direction:column; gap:1.1rem; }
-        .proj-card {
-            background:rgba(255,255,255,.03); border:1px solid rgba(77,159,255,.1);
-            padding:1.4rem; transition:border-color .3s;
-        }
-        .proj-card:hover { border-color:rgba(77,159,255,.35); }
-        .proj-badge {
-            font-family:var(--ff-mono); font-size:.58rem; letter-spacing:.2em;
-            color:var(--accent); text-transform:uppercase; margin-bottom:.35rem;
-        }
-        .proj-title {
-            font-family:var(--ff-disp); font-size:1.75rem; letter-spacing:.05em;
-            line-height:1; margin-bottom:.45rem;
-        }
-        .proj-desc { font-size:.82rem; color:var(--muted); line-height:1.65; margin-bottom:.8rem; }
-        .proj-tags { display:flex; flex-wrap:wrap; gap:.32rem; margin-bottom:.8rem; }
-        .proj-tag {
-            font-family:var(--ff-mono); font-size:.57rem; letter-spacing:.1em;
-            color:var(--muted); border:1px solid rgba(255,255,255,.09); padding:.14rem .5rem;
-        }
-        .proj-link {
-            font-family:var(--ff-mono); font-size:.68rem; letter-spacing:.15em;
-            color:var(--accent); display:inline-flex; align-items:center; gap:.38rem;
-            transition:gap .2s;
-        }
-        .proj-link:hover { gap:.65rem; }
-
-        /* ── Experience ── */
-        .exp-list { display:flex; flex-direction:column; gap:2.2rem; }
-        .exp-item {
-            border-left:2px solid rgba(77,159,255,.2);
-            padding-left:1.5rem; position:relative;
-        }
-        .exp-item::before {
-            content:''; position:absolute; left:-5px; top:.4rem;
-            width:8px; height:8px; border-radius:50%; background:var(--accent);
-            box-shadow:0 0 8px var(--accent);
-        }
-        .exp-company { font-family:var(--ff-disp); font-size:2rem; letter-spacing:.05em; line-height:1; }
-        .exp-when {
-            font-family:var(--ff-mono); font-size:.62rem; letter-spacing:.15em;
-            color:var(--accent); margin:.28rem 0 .1rem; text-transform:uppercase;
-        }
-        .exp-where { font-family:var(--ff-mono); font-size:.6rem; letter-spacing:.1em; color:rgba(122,144,176,.55); }
-        .exp-role {
-            font-family:var(--ff-disp); font-size:1.2rem; letter-spacing:.07em;
-            color:var(--muted); margin:.6rem 0 .5rem;
-        }
-        .exp-tags { display:flex; flex-wrap:wrap; gap:.32rem; margin-bottom:.75rem; }
-        .exp-tag {
-            font-family:var(--ff-mono); font-size:.57rem; letter-spacing:.1em;
-            color:var(--muted); border:1px solid rgba(255,255,255,.09); padding:.14rem .5rem;
-        }
-        .exp-pts { display:flex; flex-direction:column; gap:.5rem; }
-        .exp-pts li {
-            font-size:.82rem; color:var(--muted); line-height:1.65;
-            padding-left:1.1rem; position:relative;
-        }
-        .exp-pts li::before { content:'→'; position:absolute; left:0; color:var(--accent); font-size:.7rem; }
-        .exp-pts strong { color:var(--white); font-weight:500; }
-
-        /* ── Contact ── */
-        .contact-big {
-            font-family:var(--ff-disp); font-size:clamp(3rem,7vw,5rem);
-            line-height:.88; margin-bottom:1.8rem;
-        }
-        .contact-big .ghost { color:transparent; -webkit-text-stroke:1.5px rgba(255,255,255,.28); }
-        .contact-email {
-            font-family:var(--ff-mono); font-size:.82rem; color:var(--accent);
-            letter-spacing:.05em; margin-bottom:1rem;
-        }
-        .contact-blurb { font-size:.84rem; color:var(--muted); line-height:1.8; margin-bottom:1.4rem; }
-        .soc-row { display:flex; gap:.75rem; margin-bottom:2rem; }
-        .soc-link {
-            width:42px; height:42px; border:1px solid var(--border);
-            display:flex; align-items:center; justify-content:center;
-            font-size:.95rem; color:var(--muted); transition:border-color .2s, color .2s;
-        }
-        .soc-link:hover { border-color:var(--accent); color:var(--accent); }
-        .cf { display:flex; flex-direction:column; gap:.85rem; }
-        .fc-input {
-            width:100%; background:rgba(255,255,255,.03);
-            border:1px solid var(--border); color:var(--white);
-            padding:.82rem 1rem; font-family:var(--ff-body); font-size:.84rem;
-            outline:none; transition:border-color .2s;
-        }
-        .fc-input:focus { border-color:var(--accent); }
-        .fc-input::placeholder { color:rgba(122,144,176,.45); }
-        textarea.fc-input { resize:none; height:116px; }
-        .btn-submit {
-            font-family:var(--ff-disp); font-size:1rem; letter-spacing:.15em;
-            padding:.78rem 2rem; background:var(--accent); color:#000510;
-            border:none; cursor:pointer; transition:background .2s;
-        }
-        .btn-submit:hover { background:var(--white); }
-        .qr-wrap { margin-top:2rem; opacity:.4; }
-        .qr-label {
-            font-family:var(--ff-mono); font-size:.58rem; letter-spacing:.22em;
-            color:var(--muted); margin-bottom:.5rem; text-transform:uppercase;
-        }
-
-        /* ── Video Modal ── */
-        #videoModal {
-            position:fixed; inset:0; background:rgba(0,0,8,.95);
-            z-index:10000; opacity:0; transition:opacity .3s ease;
-            display:none; align-items:center; justify-content:center;
-        }
-        #videoModal.show { opacity:1; }
-        .modal-box {
-            position:relative; width:90%; max-width:860px;
-            background:rgba(2,6,18,.96); border:1px solid var(--border);
-            padding:1.5rem; backdrop-filter:blur(20px);
-        }
-        .modal-hd { display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; }
-        #modal-title { font-family:var(--ff-disp); font-size:1.8rem; letter-spacing:.1em; }
-        .close-btn { font-size:1.5rem; color:var(--muted); transition:color .2s; cursor:pointer; background:none; border:none; }
-        .close-btn:hover { color:var(--white); }
-        #projectVideo { width:100%; }
-
-        /* ── Responsive ── */
-        @media (max-width:768px) {
-            .hero-name { font-size:clamp(3rem,14vw,4.5rem); }
-            .ring-wrap { width:170px; height:170px; }
-            .hero-name-block { bottom:calc(50% + 100px); }
-            .hero-info-block { top:calc(50% + 100px); }
-            .panel { width:100vw; }
-            .panel-body { padding:1.4rem 1.4rem 2rem; }
-        }
-        @media (hover:none) {
-            .c-dot,.c-ring { display:none; }
-            body { cursor:auto; }
-        }
-    </style>
+  @media (max-width: 480px) {
+    main { padding: 62px 22px 80px; }
+    .year { display: none; }
+  }
+</style>
 </head>
 <body>
 
-<canvas id="c"></canvas>
+  <div id="vortex"></div>
 
-<div class="c-dot" id="cDot"></div>
-<div class="c-ring" id="cRing"></div>
+  <main>
+    <header>
+      <h1>Ahmad Yahya <span class="loc">Toronto</span></h1>
+      <p class="tagline">focused on web, AI, and product engineering</p>
+    </header>
 
-<!-- Loading -->
-<div id="loading">
-    <div class="ld-title">AY</div>
-    <div class="ld-sub">Initialising Universe</div>
-    <div class="ld-bar-wrap"><div class="ld-bar"></div></div>
-</div>
+    <section>
+      <div class="label">work</div>
+      <a class="row" href="https://www.sunlife.ca" target="_blank" rel="noopener">
+        <img class="ico sunlife" src="assets/sunlife.png" alt="Sun Life" />
+        <span class="body">
+          <span class="entry-head">
+            <span class="title">Software Engineer @ Sun Life</span>
+            <span class="year">2026</span>
+          </span>
+          <span class="desc">Incoming fall 2026</span>
+        </span>
+      </a>
+      <a class="row" href="https://www.rbcwealthmanagement.com" target="_blank" rel="noopener">
+        <img class="ico rbc" src="assets/rbc.png" alt="RBC" />
+        <span class="body">
+          <span class="entry-head">
+            <span class="title">Software Engineer Intern @ RBC</span>
+            <span class="year">2026</span>
+          </span>
+          <span class="desc clamp-3">Built 1UP Assist, an MCP-native AI agent letting managers and directors
+             query a large MongoDB dataset in natural language — adopted into daily use.</span>
+        </span>
+      </a>
+      <a class="row" href="https://dominarlo.ca" target="_blank" rel="noopener">
+        <img class="ico dominarlo" src="assets/dominarlo.png" alt="Dominarlo" />
+        <span class="body">
+          <span class="entry-head">
+            <span class="title">Software Engineer @ Dominarlo</span>
+            <span class="year">2025</span>
+          </span>
+          <span class="desc">Shipped full-stack features for a scalable educational platform used by thousands of students.</span>
+        </span>
+      </a>
+    </section>
 
-<!-- Hero Overlay -->
-<div id="hero-overlay">
-    <!-- Rotating text ring around Earth -->
-    <div class="ring-wrap">
-        <svg viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
-            <path id="rp" d="M 120,120 m -105,0 a 105,105 0 1,1 210,0 a 105,105 0 1,1 -210,0" fill="none"/>
-            <text font-family="'Space Mono',monospace" font-size="10.5" fill="rgba(77,159,255,0.7)" letter-spacing="3.2">
-                <textPath href="#rp">AHMAD YAHYA · SOFTWARE DEVELOPER · AHMAD YAHYA · SOFTWARE DEVELOPER · </textPath>
-            </text>
-        </svg>
-    </div>
+    <section>
+      <div class="label">projects</div>
+      <div class="row">
+        <span class="body">
+          <span class="ptitle">
+            <span class="title">fitquest</span>
+            <span class="plinks">
+              <a href="https://github.com/AhmadYahya-05" target="_blank" rel="noopener">github</a>
+              <a href="https://devpost.com/software/fitness-quest-31h2ci" target="_blank" rel="noopener">demo</a>
+            </span>
+          </span>
+          <span class="desc">AI-powered fitness game with coaching, nutrition, form analysis, and RPG-style progression.</span>
+        </span>
+      </div>
+      <div class="row">
+        <span class="body">
+          <span class="ptitle">
+            <span class="title">routeguard</span>
+            <span class="plinks">
+              <a href="https://github.com/AhmadYahya-05" target="_blank" rel="noopener">github</a>
+              <a href="#" target="_blank" rel="noopener">demo</a>
+            </span>
+          </span>
+          <span class="desc">A safety-focused AI agent system that makes policy enforcement transparent and observable.</span>
+        </span>
+      </div>
+    </section>
 
-    <!-- Name above Earth -->
-    <div class="hero-name-block">
-        <div class="hero-name">AHMAD<br>YAHYA</div>
-    </div>
+    <footer>
+      <div class="footer-links">
+        <a href="mailto:ahmad.rafay.yahya@gmail.com">email</a>
+        <a href="https://www.linkedin.com/public-profile/settings?trk=d_flagship3_profile_self_view_public_profile" target="_blank" rel="noopener">linkedin</a>
+        <a href="https://github.com/AhmadYahya-05" target="_blank" rel="noopener">github</a>
+      </div>
 
-    <!-- Info below Earth -->
-    <div class="hero-info-block">
-        <div class="hero-title">Software Developer</div>
-        <div class="hero-links">
-            <a href="https://github.com/AhmadYahya-05" class="hero-link" target="_blank">
-                <i class="fab fa-github"></i> GitHub
-            </a>
-            <a href="https://www.linkedin.com/public-profile/settings?trk=d_flagship3_profile_self_view_public_profile" class="hero-link" target="_blank">
-                <i class="fab fa-linkedin"></i> LinkedIn
-            </a>
-        </div>
-    </div>
-</div>
+      <div id="laurier-webring" style="display: flex; align-items: center; justify-content: center; gap: 16px;">
+        <a
+          href="https://laurier.network/api/prev?from=ahmadyahya"
+          style="display: flex; align-items: center; justify-content: center; color: #71717a; font-size: 16px; text-decoration: none; padding: 0.5rem; border-radius: 4px; transition: all 0.2s ease; border: none; background: transparent; cursor: pointer;"
+          onmouseenter="this.style.color='#fafafa'; this.style.backgroundColor='rgba(255, 255, 255, 0.1)';"
+          onmouseleave="this.style.color='#71717a'; this.style.backgroundColor='transparent';"
+          title="Previous site"
+        >
+          ←
+        </a>
+        <a href="https://laurier.network" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; border: none;">
+          <img src="https://laurier.network/laurier-goldenhawk.svg" alt="Laurier Webring" style="height: 20px; width: auto; opacity: 0.7; transition: opacity 0.2s ease;" />
+        </a>
+        <a
+          href="https://laurier.network/api/next?from=ahmadyahya"
+          style="display: flex; align-items: center; justify-content: center; color: #71717a; font-size: 16px; text-decoration: none; padding: 0.5rem; border-radius: 4px; transition: all 0.2s ease; border: none; background: transparent; cursor: pointer;"
+          onmouseenter="this.style.color='#fafafa'; this.style.backgroundColor='rgba(255, 255, 255, 0.1)';"
+          onmouseleave="this.style.color='#71717a'; this.style.backgroundColor='transparent';"
+          title="Next site"
+        >
+          →
+        </a>
+      </div>
+    </footer>
+  </main>
 
-<div id="explore-hint">↑ Click a planet to explore ↑</div>
+  <script type="module">
+    import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js";
 
-<!-- Planet Labels -->
-<div class="planet-label" id="lbl-projects">
-    <div class="lbl-text">Projects</div>
-    <div class="lbl-line"></div>
-</div>
-<div class="planet-label" id="lbl-experience">
-    <div class="lbl-text">Experience</div>
-    <div class="lbl-line"></div>
-</div>
-<div class="planet-label" id="lbl-contact">
-    <div class="lbl-text">Contact</div>
-    <div class="lbl-line"></div>
-</div>
-<div class="planet-label" id="lbl-github">
-    <div class="lbl-text">GitHub</div>
-    <div class="lbl-line"></div>
-</div>
+    const container = document.getElementById("vortex");
 
-<!-- Corner Nav -->
-<nav id="corner-nav">
-    <button class="cnav-item" data-planet="projects">Projects</button>
-    <button class="cnav-item" data-planet="experience">Experience</button>
-    <button class="cnav-item" data-planet="contact">Contact</button>
-    <button class="cnav-item" data-planet="github">GitHub</button>
-</nav>
+    const vertexShader = `
+      void main() {
+        gl_Position = vec4(position, 1.0);
+      }
+    `;
 
-<!-- Back Button -->
-<button id="back-btn">← Universe</button>
+    // Multiple fragment shader options. Select via URL: ?shader=fbm (default) | plasma | bands
+    const shaders = {
+      fbm: `
+        precision highp float;
+        uniform vec2 resolution;
+        uniform float time;
 
-<!-- Panel: Projects -->
-<div class="panel" id="panel-projects">
-    <div class="panel-header">
-        <div class="panel-label">Selected Work</div>
-        <h2 class="panel-title">PROJECTS</h2>
-        <button class="panel-close">×</button>
-    </div>
-    <div class="panel-body">
-        <div class="proj-grid">
-            <div class="proj-card">
-                <div class="proj-badge">Winner · Hackathon</div>
-                <div class="proj-title">FitQuest</div>
-                <p class="proj-desc">An AI-powered fitness game blending AI Coach, Nutritionist AI, Real-Time Form Analysis, and RPG Progression.</p>
-                <div class="proj-tags">
-                    <span class="proj-tag">React.js</span><span class="proj-tag">MongoDB</span>
-                    <span class="proj-tag">Gemini API</span><span class="proj-tag">Express</span><span class="proj-tag">Railway</span>
-                </div>
-                <a href="https://devpost.com/software/fitness-quest-31h2ci" class="proj-link" target="_blank">View Project <i class="fas fa-arrow-right"></i></a>
-            </div>
-            <div class="proj-card">
-                <div class="proj-badge">Winner · Hackathon</div>
-                <div class="proj-title">RouteGuard</div>
-                <p class="proj-desc">AI trading agents are powerful, but without guardrails they make risky decisions. RouteGuard turns policy enforcement into something you can watch in real time.</p>
-                <div class="proj-tags">
-                    <span class="proj-tag">Next.js</span><span class="proj-tag">React</span>
-                    <span class="proj-tag">TypeScript</span><span class="proj-tag">Railway</span>
-                </div>
-                <a href="#" class="proj-link video-trigger" data-title="RouteGuard Demo" data-src="assets/routeguard.mp4">View Demo <i class="fas fa-play"></i></a>
-            </div>
-            <div class="proj-card">
-                <div class="proj-badge">Live</div>
-                <div class="proj-title">Exam Scheduler</div>
-                <p class="proj-desc">An interactive web app that lets Laurier students generate a personalized, visual exam schedule using real-time course data.</p>
-                <div class="proj-tags">
-                    <span class="proj-tag">PostgreSQL</span><span class="proj-tag">Spring Boot</span>
-                    <span class="proj-tag">React.js</span><span class="proj-tag">Vercel</span>
-                </div>
-                <a href="https://laurierexamscheduler.vercel.app/" class="proj-link" target="_blank">View Project <i class="fas fa-arrow-right"></i></a>
-            </div>
-            <div class="proj-card">
-                <div class="proj-badge">Live</div>
-                <div class="proj-title">Mindful Harmony</div>
-                <p class="proj-desc">Combines journaling, AI support, playlists, and quick activities with a live mood map, vent wall, and activity wall — making self-care simple and social.</p>
-                <div class="proj-tags">
-                    <span class="proj-tag">Python</span><span class="proj-tag">React</span><span class="proj-tag">MongoDB</span>
-                </div>
-                <a href="https://ignition-hacks-copy-production.up.railway.app/" class="proj-link" target="_blank">View Project <i class="fas fa-arrow-right"></i></a>
-            </div>
-            <div class="proj-card">
-                <div class="proj-badge">Demo</div>
-                <div class="proj-title">Player Matchup</div>
-                <p class="proj-desc">NBA player comparison tool with season statistics and side-by-side performance insights.</p>
-                <div class="proj-tags">
-                    <span class="proj-tag">React.js</span><span class="proj-tag">Node.js</span><span class="proj-tag">NBA API</span>
-                </div>
-                <a href="#" class="proj-link video-trigger" data-title="Player Matchup Demo" data-src="assets/nbaf.mp4">View Demo <i class="fas fa-play"></i></a>
-            </div>
-            <div class="proj-card">
-                <div class="proj-badge">Demo</div>
-                <div class="proj-title">Macro Tracker</div>
-                <p class="proj-desc">Nutritional tracking app with daily meal logging and clean macro progress visualization.</p>
-                <div class="proj-tags">
-                    <span class="proj-tag">React.js</span><span class="proj-tag">Tailwind CSS</span>
-                </div>
-                <a href="#" class="proj-link video-trigger" data-title="Macro Tracker Demo" data-src="assets/calories.mp4">View Demo <i class="fas fa-play"></i></a>
-            </div>
-        </div>
-    </div>
-</div>
+        vec2 hash2(vec2 p) {
+          p = vec2(dot(p, vec2(127.1, 311.7)), dot(p, vec2(269.5, 183.3)));
+          return -1.0 + 2.0 * fract(sin(p) * 43758.5453123);
+        }
 
-<!-- Panel: Experience -->
-<div class="panel" id="panel-experience">
-    <div class="panel-header">
-        <div class="panel-label">Career</div>
-        <h2 class="panel-title">EXPERIENCE</h2>
-        <button class="panel-close">×</button>
-    </div>
-    <div class="panel-body">
-        <div class="exp-list">
-            <div class="exp-item">
-                <div class="exp-company">RBC</div>
-                <div class="exp-when">Jan 2026 – Aug 2026</div>
-                <div class="exp-where">Toronto, Canada</div>
-                <div class="exp-role">Software Engineer Intern</div>
-                <div class="exp-tags">
-                    <span class="exp-tag">JavaScript</span><span class="exp-tag">Angular.js</span>
-                    <span class="exp-tag">Node.js</span><span class="exp-tag">MongoDB</span>
-                </div>
-                <ul class="exp-pts">
-                    <li>Developing an analytics tool measuring team productivity — estimated to save <strong>$30MM in development costs</strong> over 3 years.</li>
-                    <li>Spearheading <strong>1UP Assist</strong>, an MCP-native chatbot that surfaces real-time team insights from Jira, GitHub, and engineering pipelines via natural language.</li>
-                    <li>Built a fully customizable analytics dashboard with drag-and-drop tile management, end-to-end Node.js APIs integrated with an Angular frontend.</li>
-                </ul>
-            </div>
-            <div class="exp-item">
-                <div class="exp-company">Dominarlo</div>
-                <div class="exp-when">Sept 2024 – Apr 2025</div>
-                <div class="exp-where">Edmonton, Canada</div>
-                <div class="exp-role">Software Engineer</div>
-                <div class="exp-tags">
-                    <span class="exp-tag">JavaScript</span><span class="exp-tag">React.js</span><span class="exp-tag">MongoDB</span>
-                </div>
-                <ul class="exp-pts">
-                    <li>Integrated Google Cloud Translate API for real-time language switching (En, Ar, Fr), increasing accessibility for <strong>30%+ of non-English users</strong>.</li>
-                    <li>Designed and developed an interactive quiz game with real-time question-answer interactions.</li>
-                    <li>Architected RESTful APIs for auth, game state, and leaderboard tracking supporting <strong>5,000+ users</strong>.</li>
-                    <li>Built responsive UI ensuring <strong>99% cross-device compatibility</strong> across desktop, tablet, and mobile.</li>
-                </ul>
-            </div>
-            <div class="exp-item">
-                <div class="exp-company">Dominarlo</div>
-                <div class="exp-when">May 2024 – Sept 2024</div>
-                <div class="exp-where">Edmonton, Canada</div>
-                <div class="exp-role">Software Engineer Intern</div>
-                <div class="exp-tags">
-                    <span class="exp-tag">JavaScript</span><span class="exp-tag">React.js</span><span class="exp-tag">OAuth2</span>
-                </div>
-                <ul class="exp-pts">
-                    <li>Implemented SSO using OAuth2 to streamline authentication across multiple platforms.</li>
-                    <li>Developed dynamic RESTful APIs supporting <strong>5,000+ concurrent users</strong> with optimized backend queries.</li>
-                    <li>Conducted code reviews and testing for three new features, driving increased user engagement.</li>
-                    <li>Collaborated with front-end and QA teams to identify bugs and deliver high-impact features.</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
+        float noise(in vec2 x) {
+          vec2 i = floor(x);
+          vec2 f = fract(x);
+          vec2 u = f * f * (3.0 - 2.0 * f);
 
-<!-- Panel: Contact -->
-<div class="panel" id="panel-contact">
-    <div class="panel-header">
-        <div class="panel-label">Get In Touch</div>
-        <h2 class="panel-title">CONTACT</h2>
-        <button class="panel-close">×</button>
-    </div>
-    <div class="panel-body">
-        <div class="contact-big">LET'S<br><span class="ghost">TALK</span></div>
-        <div class="contact-email">ahmad.rafay.yahya@gmail.com</div>
-        <p class="contact-blurb">Always open to new projects, creative ideas, or just talking shop. Whether it's a cool build or a conversation — reach out.</p>
-        <div class="soc-row">
-            <a href="https://github.com/AhmadYahya-05" class="soc-link" target="_blank"><i class="fab fa-github"></i></a>
-            <a href="https://www.linkedin.com/public-profile/settings?trk=d_flagship3_profile_self_view_public_profile" class="soc-link" target="_blank"><i class="fab fa-linkedin"></i></a>
-        </div>
-        <form action="https://formspree.io/f/myzwzdjz" method="POST" class="cf">
-            <input type="text" name="name" class="fc-input" placeholder="Your Name" required>
-            <input type="email" name="email" class="fc-input" placeholder="Your Email" required>
-            <textarea name="message" class="fc-input" placeholder="Your Message" required></textarea>
-            <button type="submit" class="btn-submit">Send Message</button>
-        </form>
-        <div class="qr-wrap">
-            <div class="qr-label">Scan to visit</div>
-            <div id="qr-code"></div>
-        </div>
-    </div>
-</div>
+          float a = dot(hash2(i + vec2(0.0, 0.0)), f - vec2(0.0, 0.0));
+          float b = dot(hash2(i + vec2(1.0, 0.0)), f - vec2(1.0, 0.0));
+          float c = dot(hash2(i + vec2(0.0, 1.0)), f - vec2(0.0, 1.0));
+          float d = dot(hash2(i + vec2(1.0, 1.0)), f - vec2(1.0, 1.0));
 
-<!-- Video Modal -->
-<div id="videoModal">
-    <div class="modal-box">
-        <div class="modal-hd">
-            <div id="modal-title">Project Demo</div>
-            <button class="close-btn" id="closeBtn">×</button>
-        </div>
-        <video id="projectVideo" controls>
-            <source src="" type="video/mp4">
-        </video>
-    </div>
-</div>
+          return mix(mix(a, b, u.x), mix(c, d, u.x), u.y);
+        }
 
-<script src="https://unpkg.com/three@0.152.2/build/three.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-<script>
-/* ═══════════════════════════════════════════
-   THREE.JS SCENE
-═══════════════════════════════════════════ */
-const canvas = document.getElementById('c');
-const scene  = new THREE.Scene();
+        float fbm(vec2 p) {
+          float v = 0.0;
+          float a = 0.5;
+          for (int i = 0; i < 5; i++) {
+            v += a * noise(p);
+            p *= 2.0;
+            a *= 0.5;
+          }
+          return v;
+        }
 
-const camera = new THREE.PerspectiveCamera(55, innerWidth / innerHeight, 0.1, 2000);
-camera.position.set(0, 6, 16);
-camera.lookAt(0, 0, 0);
+        void main() {
+          vec2 uv = gl_FragCoord.xy / resolution.xy;
+          vec2 p = uv - 0.5;
+          p.x *= resolution.x / resolution.y;
 
-const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
-renderer.setSize(innerWidth, innerHeight);
-renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-renderer.setClearColor(0x000510, 1);
+          float t = time * 0.12;
 
-const camHome   = new THREE.Vector3(0, 6, 16);
-const camTarget = new THREE.Vector3(0, 0, 0);
+          float q = fbm(p * 1.2 + vec2(0.0, t * 0.3));
+          float r = fbm(p * 2.6 + vec2(t * 0.6, -t * 0.2) + q * 0.6);
 
-/* ── Lighting ── */
-scene.add(new THREE.AmbientLight(0x08102a, 3));
-const sun = new THREE.DirectionalLight(0xfff0d0, 4);
-sun.position.set(-14, 8, 12);
-scene.add(sun);
-const rimLight = new THREE.DirectionalLight(0x2244aa, 0.8);
-rimLight.position.set(10, -5, -10);
-scene.add(rimLight);
+          vec3 col = mix(vec3(0.02, 0.03, 0.06), vec3(0.06, 0.14, 0.28), r);
+          col = mix(col, vec3(0.18, 0.08, 0.22), q * 0.5);
 
-/* ── Stars ── */
-function makeStars(count, rMin, rMax, size, opacity, color) {
-    const verts = [];
-    for (let i = 0; i < count; i++) {
-        const th = Math.random() * Math.PI * 2;
-        const ph = Math.acos(Math.random() * 2 - 1);
-        const r  = rMin + Math.random() * (rMax - rMin);
-        verts.push(r * Math.sin(ph) * Math.cos(th), r * Math.sin(ph) * Math.sin(th), r * Math.cos(ph));
-    }
-    const geo = new THREE.BufferGeometry();
-    geo.setAttribute('position', new THREE.Float32BufferAttribute(verts, 3));
-    return new THREE.Points(geo, new THREE.PointsMaterial({ color, size, sizeAttenuation: true, transparent: true, opacity }));
-}
-scene.add(makeStars(9000, 200, 800, 1.1, 0.9, 0xffffff));
-scene.add(makeStars(4000, 600, 1000, 0.6, 0.5, 0xaabbdd));
+          float dist = length(p);
+          float vign = smoothstep(0.9, 0.2, dist);
+          col *= 0.8 + 0.2 * vign;
 
-/* ── Nebula blob (faint background colour) ── */
-const nebGeo = new THREE.SphereGeometry(350, 16, 16);
-const nebMat = new THREE.MeshBasicMaterial({ color: 0x0a0420, side: THREE.BackSide, transparent: true, opacity: 0.9 });
-scene.add(new THREE.Mesh(nebGeo, nebMat));
+          col += 0.03 * fbm(p * 6.0 + t * 0.9);
 
-/* ═══════════════════════════════════════════
-   PROCEDURAL TEXTURES
-═══════════════════════════════════════════ */
-function makeTex(w, h, fn) {
-    const c = document.createElement('canvas');
-    c.width = w; c.height = h;
-    fn(c.getContext('2d'), w, h);
-    return new THREE.CanvasTexture(c);
-}
+          gl_FragColor = vec4(col, 1.0);
+        }
+      `,
 
-const texEarth = makeTex(2048, 1024, (ctx, W, H) => {
-    // Ocean
-    const og = ctx.createLinearGradient(0, 0, 0, H);
-    og.addColorStop(0,   '#0b2f5e');
-    og.addColorStop(0.3, '#0e4080');
-    og.addColorStop(0.5, '#1255a0');
-    og.addColorStop(0.7, '#0e4080');
-    og.addColorStop(1,   '#0b2f5e');
-    ctx.fillStyle = og; ctx.fillRect(0, 0, W, H);
+      plasma: `
+        precision highp float;
+        uniform vec2 resolution;
+        uniform float time;
 
-    // Land shapes
-    const lands = [
-        {x:310, y:290, rx:125, ry:155, rot:-0.2, c:'#2b5e24'},
-        {x:380, y:440, rx:75,  ry:90,  rot:0.3,  c:'#347020'},
-        {x:440, y:570, rx:65,  ry:125, rot:0.1,  c:'#3a6820'},
-        {x:985, y:275, rx:52,  ry:65,  rot:0,    c:'#426e28'},
-        {x:1025,y:445, rx:85,  ry:135, rot:0,    c:'#7a6535'},
-        {x:1260,y:285, rx:230, ry:145, rot:-0.1, c:'#4a7030'},
-        {x:1410,y:370, rx:150, ry:95,  rot:0.1,  c:'#527028'},
-        {x:1560,y:580, rx:85,  ry:65,  rot:0,    c:'#80602e'},
-        {x:465,  y:175, rx:50,  ry:65,  rot:0.2,  c:'#98b4c0'},
-    ];
-    lands.forEach(l => {
-        ctx.save();
-        ctx.translate(l.x, l.y); ctx.rotate(l.rot);
-        ctx.fillStyle = l.c;
-        ctx.beginPath(); ctx.ellipse(0, 0, l.rx, l.ry, 0, 0, Math.PI * 2); ctx.fill();
-        ctx.restore();
-    });
+        void main() {
+          vec2 uv = (gl_FragCoord.xy / resolution.xy) * 2.0 - 1.0;
+          uv.x *= resolution.x / resolution.y;
 
-    // Surface noise
-    ctx.globalAlpha = 0.35;
-    for (let i = 0; i < 250; i++) {
-        ctx.fillStyle = Math.random() > 0.5 ? '#386020' : '#608040';
-        ctx.beginPath();
-        ctx.ellipse(Math.random()*W, Math.random()*H, 5+Math.random()*22, 5+Math.random()*14, Math.random()*Math.PI, 0, Math.PI*2);
-        ctx.fill();
-    }
+          float t = time * 0.6;
+          float v = 0.0;
+          v += sin(uv.x * 3.0 + t);
+          v += sin((uv.x * 1.5 + uv.y * 2.0) * 4.0 + t * 0.8);
+          v += sin(length(uv) * 4.0 - t * 1.2);
+          v = v / 3.0;
+          v = 0.5 + 0.5 * sin(3.1415 * v + t * 0.2);
 
-    // Ice caps
-    ctx.globalAlpha = 1;
-    ['#cce4ee','#b0cedd'].forEach((col, idx) => {
-        const y = idx === 0 ? 0 : H;
-        const g = ctx.createRadialGradient(W/2, y, 0, W/2, y, 200);
-        g.addColorStop(0, col); g.addColorStop(0.75, 'rgba(180,210,230,.5)'); g.addColorStop(1, 'transparent');
-        ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
-    });
+          vec3 a = vec3(0.02, 0.03, 0.05);
+          vec3 b = vec3(0.16, 0.08, 0.3);
+          vec3 c = vec3(0.9, 0.45, 0.2);
 
-    // Clouds
-    ctx.globalAlpha = 0.22;
-    ctx.fillStyle = '#ffffff';
-    for (let i = 0; i < 90; i++) {
-        ctx.beginPath();
-        ctx.ellipse(Math.random()*W, 80+Math.random()*860, 40+Math.random()*180, 10+Math.random()*35, Math.random()*.6, 0, Math.PI*2);
-        ctx.fill();
-    }
-});
+          vec3 col = mix(a, b, smoothstep(0.0, 0.6, v));
+          col = mix(col, c, smoothstep(0.6, 1.0, v));
 
-const texMars = makeTex(1024, 512, (ctx, W, H) => {
-    const g = ctx.createRadialGradient(W*.4, H*.4, 0, W/2, H/2, W*.7);
-    g.addColorStop(0, '#c94a18'); g.addColorStop(0.5, '#a03212'); g.addColorStop(1, '#6e1a06');
-    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
-    ctx.globalAlpha = 0.5;
-    for (let i = 0; i < 80; i++) {
-        ctx.fillStyle = Math.random() > 0.5 ? '#8b2200' : '#d45020';
-        ctx.beginPath();
-        ctx.ellipse(Math.random()*W, Math.random()*H, 4+Math.random()*45, 4+Math.random()*28, Math.random()*Math.PI, 0, Math.PI*2);
-        ctx.fill();
-    }
-    // polar cap hint
-    ctx.globalAlpha = 0.6; ctx.fillStyle = '#e8ddd0';
-    ctx.beginPath(); ctx.ellipse(W/2, 20, 120, 18, 0, 0, Math.PI*2); ctx.fill();
-});
+          float vign = smoothstep(1.2, 0.4, length(uv));
+          col *= 0.8 + 0.2 * vign;
 
-const texSaturn = makeTex(1024, 512, (ctx, W, H) => {
-    const bands = ['#e8c878','#d0a848','#f0d890','#c09038','#dcc068','#c8a040','#f0dca0','#c49038'];
-    const bH = H / bands.length;
-    bands.forEach((col, i) => { ctx.fillStyle = col; ctx.fillRect(0, i*bH, W, bH); });
-    ctx.globalAlpha = 0.18;
-    for (let y = 0; y < H; y += 6) {
-        ctx.fillStyle = Math.sin(y/25) > 0 ? 'rgba(255,240,180,.3)' : 'rgba(100,60,0,.2)';
-        ctx.fillRect(0, y, W, 6);
-    }
-});
+          gl_FragColor = vec4(col, 1.0);
+        }
+      `,
 
-const texMoon = makeTex(512, 256, (ctx, W, H) => {
-    ctx.fillStyle = '#949494'; ctx.fillRect(0, 0, W, H);
-    ctx.globalAlpha = 0.5;
-    for (let i = 0; i < 45; i++) {
-        const r = 3 + Math.random() * 18;
-        ctx.fillStyle = Math.random() > 0.5 ? '#707070' : '#b0b0b0';
-        ctx.beginPath(); ctx.arc(Math.random()*W, Math.random()*H, r, 0, Math.PI*2); ctx.fill();
-    }
-});
+      bands: `
+        precision highp float;
+        uniform vec2 resolution;
+        uniform float time;
 
-const texNeptune = makeTex(512, 256, (ctx, W, H) => {
-    const g = ctx.createLinearGradient(0, 0, 0, H);
-    g.addColorStop(0, '#162668'); g.addColorStop(0.4, '#2248a8'); g.addColorStop(0.7, '#1a5598'); g.addColorStop(1, '#0a1a5a');
-    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
-    ctx.globalAlpha = 0.22;
-    for (let i = 0; i < 18; i++) {
-        const y = Math.random() * H;
-        ctx.fillStyle = '#4488dd';
-        ctx.fillRect(0, y, W, 3 + Math.random() * 10);
-    }
-    // Storm spot
-    ctx.globalAlpha = 0.35; ctx.fillStyle = '#1a3a8a';
-    ctx.beginPath(); ctx.ellipse(W*.35, H*.55, 55, 30, -0.3, 0, Math.PI*2); ctx.fill();
-});
+        float layer(vec2 p, float speed, float scale, float offset) {
+          float v = sin((p.y * scale + offset) + time * speed);
+          return smoothstep(-0.2, 0.2, v) * 0.6;
+        }
 
-/* ═══════════════════════════════════════════
-   EARTH
-═══════════════════════════════════════════ */
-const earth = new THREE.Mesh(
-    new THREE.SphereGeometry(1.45, 72, 72),
-    new THREE.MeshPhongMaterial({ map: texEarth, specular: new THREE.Color(0x1a3366), shininess: 18 })
-);
-scene.add(earth);
+        void main() {
+          vec2 uv = gl_FragCoord.xy / resolution.xy;
+          vec2 p = uv - 0.5;
+          p.x *= resolution.x / resolution.y;
 
-// Atmosphere
-scene.add(new THREE.Mesh(
-    new THREE.SphereGeometry(1.56, 64, 64),
-    new THREE.MeshPhongMaterial({ color: 0x2255cc, transparent: true, opacity: 0.13, side: THREE.FrontSide, depthWrite: false })
-));
-// Outer glow
-scene.add(new THREE.Mesh(
-    new THREE.SphereGeometry(1.72, 32, 32),
-    new THREE.MeshBasicMaterial({ color: 0x0a1f66, transparent: true, opacity: 0.055, side: THREE.FrontSide, depthWrite: false })
-));
+          float s = 0.0;
+          s += layer(p, 0.6, 6.0, 0.0);
+          s += layer(p, 0.4, 12.0, 1.3);
+          s += layer(p, 0.9, 3.0, -0.6);
 
-/* ═══════════════════════════════════════════
-   ORBIT RING HELPER
-═══════════════════════════════════════════ */
-function makeOrbitRing(r, col = 0x1a2a44, opacity = 0.3) {
-    const pts = [];
-    for (let i = 0; i <= 256; i++) {
-        const a = (i / 256) * Math.PI * 2;
-        pts.push(new THREE.Vector3(Math.cos(a) * r, 0, Math.sin(a) * r));
-    }
-    const geo = new THREE.BufferGeometry().setFromPoints(pts);
-    return new THREE.LineLoop(geo, new THREE.LineBasicMaterial({ color: col, transparent: true, opacity }));
-}
+          vec3 base = vec3(0.03, 0.04, 0.06);
+          vec3 band = vec3(0.12, 0.18, 0.36);
+          vec3 accent = vec3(0.24, 0.08, 0.22);
 
-/* ═══════════════════════════════════════════
-   PLANETS
-═══════════════════════════════════════════ */
-const PLANET_DEFS = [
-    {
-        id: 'github', label: 'GitHub',
-        orbitR: 2.8,  radius: 0.32, tex: texMoon,
-        speed: 0.55, angle: 1.0, tilt: 0,
-        orbitCol: 0x2a3444, hasRings: false,
-        action: () => window.open('https://github.com/AhmadYahya-05', '_blank'),
-    },
-    {
-        id: 'projects', label: 'PROJECTS',
-        orbitR: 4.6,  radius: 0.64, tex: texMars,
-        speed: 0.27, angle: 0.5, tilt: 0.08,
-        orbitCol: 0x3a1a0a, hasRings: false,
-    },
-    {
-        id: 'experience', label: 'EXPERIENCE',
-        orbitR: 7.0,  radius: 0.95, tex: texSaturn,
-        speed: 0.14, angle: 2.2, tilt: 0.14,
-        orbitCol: 0x3a2a08, hasRings: true,
-    },
-    {
-        id: 'contact', label: 'CONTACT',
-        orbitR: 9.5,  radius: 0.72, tex: texNeptune,
-        speed: 0.08, angle: 3.9, tilt: 0.06,
-        orbitCol: 0x08163a, hasRings: false,
-    },
-];
+          vec3 col = mix(base, band, clamp(s, 0.0, 1.0));
+          col = mix(col, accent, smoothstep(0.6, 1.0, s));
 
-const planets = PLANET_DEFS.map(pd => {
-    scene.add(makeOrbitRing(pd.orbitR, pd.orbitCol, 0.35));
+          float dist = length(p);
+          col *= 0.85 + 0.25 * (1.0 - smoothstep(0.0, 1.2, dist));
 
-    const mesh = new THREE.Mesh(
-        new THREE.SphereGeometry(pd.radius, 52, 52),
-        new THREE.MeshPhongMaterial({ map: pd.tex, shininess: 8 })
-    );
-    mesh.rotation.z = pd.tilt;
-
-    if (pd.hasRings) {
-        const ringMesh = new THREE.Mesh(
-            new THREE.RingGeometry(pd.radius * 1.38, pd.radius * 2.3, 72),
-            new THREE.MeshBasicMaterial({ color: 0xc8a040, side: THREE.DoubleSide, transparent: true, opacity: 0.55 })
-        );
-        ringMesh.rotation.x = Math.PI / 2.6;
-        mesh.add(ringMesh);
-    }
-
-    mesh.userData.planetId = pd.id;
-    const currentAngle = pd.angle;
-    mesh.position.set(Math.cos(currentAngle) * pd.orbitR, 0, Math.sin(currentAngle) * pd.orbitR);
-    scene.add(mesh);
-
-    return { ...pd, mesh, currentAngle };
-});
-
-/* ═══════════════════════════════════════════
-   RAYCASTING + CLICK
-═══════════════════════════════════════════ */
-const raycaster  = new THREE.Raycaster();
-const mouse2D    = new THREE.Vector2();
-const clickables = planets.map(p => p.mesh);
-
-let activePanel  = null;
-let isAnimating  = false;
-
-const heroOverlay  = document.getElementById('hero-overlay');
-const exploreHint  = document.getElementById('explore-hint');
-const backBtn      = document.getElementById('back-btn');
-const allLabels    = document.querySelectorAll('.planet-label');
-const cornerNav    = document.getElementById('corner-nav');
-
-canvas.addEventListener('click', e => {
-    if (isAnimating || activePanel) return;
-    mouse2D.x = (e.clientX / innerWidth) * 2 - 1;
-    mouse2D.y = -(e.clientY / innerHeight) * 2 + 1;
-    raycaster.setFromCamera(mouse2D, camera);
-    const hits = raycaster.intersectObjects(clickables);
-    if (!hits.length) return;
-    const pd = planets.find(p => p.mesh === hits[0].object);
-    if (!pd) return;
-    pd.action ? pd.action() : openPanel(pd.id, pd.mesh.position.clone());
-});
-
-canvas.addEventListener('mousemove', e => {
-    if (activePanel) return;
-    mouse2D.x = (e.clientX / innerWidth) * 2 - 1;
-    mouse2D.y = -(e.clientY / innerHeight) * 2 + 1;
-    raycaster.setFromCamera(mouse2D, camera);
-    const hits = raycaster.intersectObjects(clickables);
-    document.getElementById('cRing').classList.toggle('hov', hits.length > 0);
-});
-
-/* ═══════════════════════════════════════════
-   PANEL OPEN / CLOSE
-═══════════════════════════════════════════ */
-function openPanel(id, planetPos) {
-    if (isAnimating) return;
-    isAnimating = true;
-
-    heroOverlay.classList.add('hidden');
-    exploreHint.classList.add('hidden');
-    allLabels.forEach(l => l.classList.add('hidden'));
-    cornerNav.classList.add('hidden');
-
-    const zp = {
-        x: planetPos.x * 0.5,
-        y: Math.max(planetPos.y + 2.5, 3),
-        z: planetPos.z * 0.45 + 4.5
+          gl_FragColor = vec4(col, 1.0);
+        }
+      `
     };
 
-    gsap.to(camera.position, {
-        x: zp.x, y: zp.y, z: zp.z,
-        duration: 1.5, ease: 'power2.inOut',
-        onUpdate: () => camera.lookAt(camTarget),
-        onComplete: () => {
-            isAnimating = false;
-            activePanel = id;
-            const el = document.getElementById('panel-' + id);
-            el.style.display = 'flex';
-            requestAnimationFrame(() => el.classList.add('show'));
-            backBtn.classList.add('show');
-        }
-    });
-}
+    const params = new URLSearchParams(window.location.search);
+    const chosen = params.get('shader') || 'fbm';
+    const fragmentShader = shaders[chosen] || shaders['fbm'];
 
-function closePanel() {
-    if (!activePanel || isAnimating) return;
-    isAnimating = true;
+    const camera = new THREE.Camera();
+    camera.position.z = 1;
 
-    const el = document.getElementById('panel-' + activePanel);
-    el.classList.remove('show');
-    setTimeout(() => { el.style.display = 'none'; }, 560);
-    backBtn.classList.remove('show');
-    activePanel = null;
+    const scene = new THREE.Scene();
+    const geometry = new THREE.PlaneGeometry(2, 2);
 
-    gsap.to(camera.position, {
-        x: camHome.x, y: camHome.y, z: camHome.z,
-        duration: 1.5, ease: 'power2.inOut',
-        onUpdate: () => camera.lookAt(camTarget),
-        onComplete: () => {
-            isAnimating = false;
-            heroOverlay.classList.remove('hidden');
-            exploreHint.classList.remove('hidden');
-            allLabels.forEach(l => l.classList.remove('hidden'));
-            cornerNav.classList.remove('hidden');
-        }
-    });
-}
+    const uniforms = {
+      time: { value: 1.0 },
+      resolution: { value: new THREE.Vector2() },
+    };
 
-backBtn.addEventListener('click', closePanel);
-document.querySelectorAll('.panel-close').forEach(btn => btn.addEventListener('click', closePanel));
+    const material = new THREE.ShaderMaterial({ uniforms, vertexShader, fragmentShader });
+    scene.add(new THREE.Mesh(geometry, material));
 
-document.querySelectorAll('.cnav-item').forEach(btn => {
-    btn.addEventListener('click', () => {
-        if (isAnimating || activePanel) return;
-        const id = btn.dataset.planet;
-        const pd = planets.find(p => p.id === id);
-        if (!pd) return;
-        pd.action ? pd.action() : openPanel(id, pd.mesh.position.clone());
-    });
-});
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    container.appendChild(renderer.domElement);
 
-/* Planet label clicks */
-const labelEls = {
-    github:     document.getElementById('lbl-github'),
-    projects:   document.getElementById('lbl-projects'),
-    experience: document.getElementById('lbl-experience'),
-    contact:    document.getElementById('lbl-contact'),
-};
-Object.entries(labelEls).forEach(([id, el]) => {
-    el.addEventListener('click', () => {
-        const pd = planets.find(p => p.id === id);
-        if (!pd) return;
-        pd.action ? pd.action() : openPanel(id, pd.mesh.position.clone());
-    });
-});
-
-/* ═══════════════════════════════════════════
-   LABEL POSITIONING (3D → 2D each frame)
-═══════════════════════════════════════════ */
-function updateLabels() {
-    planets.forEach(pd => {
-        const el = labelEls[pd.id];
-        if (!el) return;
-        const wp = pd.mesh.position.clone();
-        wp.y += pd.radius + 0.55;
-        wp.project(camera);
-        const x = (wp.x + 1) / 2 * innerWidth;
-        const y = (-wp.y + 1) / 2 * innerHeight;
-        el.style.left = x + 'px';
-        el.style.top  = y + 'px';
-    });
-}
-
-/* ═══════════════════════════════════════════
-   ANIMATION LOOP
-═══════════════════════════════════════════ */
-const clock = new THREE.Clock();
-
-(function animate() {
-    requestAnimationFrame(animate);
-    const t = clock.getElapsedTime();
-
-    earth.rotation.y = t * 0.09;
-
-    planets.forEach(pd => {
-        pd.currentAngle += pd.speed * 0.01;
-        pd.mesh.position.set(
-            Math.cos(pd.currentAngle) * pd.orbitR,
-            0,
-            Math.sin(pd.currentAngle) * pd.orbitR
-        );
-        pd.mesh.rotation.y = t * 0.12;
-    });
-
-    updateLabels();
-
-    // Gentle idle drift
-    if (!activePanel && !isAnimating) {
-        camera.position.x = camHome.x + Math.sin(t * 0.14) * 0.28;
-        camera.position.y = camHome.y + Math.sin(t * 0.09) * 0.18;
-        camera.lookAt(camTarget);
+    function onResize() {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      renderer.setSize(w, h);
+      uniforms.resolution.value.x = renderer.domElement.width;
+      uniforms.resolution.value.y = renderer.domElement.height;
     }
 
-    renderer.render(scene, camera);
-})();
+    onResize();
+    window.addEventListener("resize", onResize);
 
-/* ═══════════════════════════════════════════
-   RESIZE
-═══════════════════════════════════════════ */
-window.addEventListener('resize', () => {
-    camera.aspect = innerWidth / innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(innerWidth, innerHeight);
-});
-
-/* ═══════════════════════════════════════════
-   CUSTOM CURSOR
-═══════════════════════════════════════════ */
-const cDot = document.getElementById('cDot');
-const cRing = document.getElementById('cRing');
-let mx = 0, my = 0, rx = 0, ry = 0;
-
-document.addEventListener('mousemove', e => {
-    mx = e.clientX; my = e.clientY;
-    cDot.style.left = mx + 'px'; cDot.style.top = my + 'px';
-});
-(function animRing() {
-    rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
-    cRing.style.left = rx + 'px'; cRing.style.top = ry + 'px';
-    requestAnimationFrame(animRing);
-})();
-document.querySelectorAll('a, button, .planet-label, .cnav-item').forEach(el => {
-    el.addEventListener('mouseenter', () => cRing.classList.add('hov'));
-    el.addEventListener('mouseleave', () => cRing.classList.remove('hov'));
-});
-
-/* ═══════════════════════════════════════════
-   VIDEO MODAL
-═══════════════════════════════════════════ */
-const modal      = document.getElementById('videoModal');
-const modalTitle = document.getElementById('modal-title');
-const video      = document.getElementById('projectVideo');
-
-document.querySelectorAll('.video-trigger').forEach(link => {
-    link.addEventListener('click', e => {
-        e.preventDefault();
-        modalTitle.textContent = link.dataset.title;
-        video.src = link.dataset.src;
-        modal.style.display = 'flex';
-        requestAnimationFrame(() => modal.classList.add('show'));
-        video.load();
-    });
-});
-function closeModal() {
-    modal.classList.remove('show');
-    setTimeout(() => { modal.style.display = 'none'; video.pause(); video.src = ''; }, 300);
-}
-document.getElementById('closeBtn').addEventListener('click', closeModal);
-modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
-
-/* ═══════════════════════════════════════════
-   LOADING + QR
-═══════════════════════════════════════════ */
-window.addEventListener('load', () => {
-    setTimeout(() => document.getElementById('loading').classList.add('hide'), 1300);
-
-    const url = 'https://ahmadyahya-05.github.io/';
-    const qrEl = document.getElementById('qr-code');
-    if (typeof QRCode !== 'undefined') {
-        QRCode.toCanvas(qrEl, url, { width:70, margin:1, color:{ dark:'#4d9fff', light:'transparent' } });
-    } else {
-        qrEl.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=70x70&data=${encodeURIComponent(url)}" width="70" height="70" alt="QR">`;
+    function animate() {
+      requestAnimationFrame(animate);
+      uniforms.time.value += 0.04;
+      renderer.render(scene, camera);
     }
-});
-</script>
+    animate();
+  </script>
+
 </body>
 </html>
